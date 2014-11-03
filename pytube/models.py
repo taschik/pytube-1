@@ -53,12 +53,12 @@ class Video(object):
         self.filename = self.filename.encode('utf-8')
 
         path = (normpath(path) + '/' if path else '')
-        fullpath = '{0}{1}.{2}'.format(path, self.filename, self.extension)
+        fullpath = '{0}{1}.{2}'.format(path, self.filename.encode('utf-8'), self.extension)
 
         # Check for conflicting filenames
         if isfile(fullpath):
             print("\n\nError: Conflicting filename:'{}'.\n\n".format(
-                  self.filename))
+                  self.filename.encode('utf-8')))
             exit(1)
 
         response = urlopen(self.url)
@@ -90,7 +90,7 @@ class Video(object):
             print("\n\nError: Failed to open file.\n"
                   "Check that: ('{0}'), is a valid pathname.\n\n"
                   "Or that ('{1}.{2}') is a valid filename.\n\n".format(
-                      path, self.filename, self.extension))
+                      path, self.filename.encode('utf-8'), self.extension))
             exit(2)
 
         except BufferError:
@@ -100,7 +100,7 @@ class Video(object):
 
         except KeyboardInterrupt:
             print("\n\nInterrupt signal given.\nDeleting incomplete video"
-                  "('{0}.{1}').\n\n".format(self.filename, self.extension))
+                  "('{0}.{1}').\n\n".format(self.filename.encode('utf-8'), self.extension))
             remove(fullpath)
             exit(1)
 
