@@ -71,7 +71,7 @@ class Video(object):
             with open(fullpath, 'wb') as dst_file:
                 # Print downloading message
                 print("\nDownloading: '{0}.{1}' (Bytes: {2}) \nto path: {3}\n\n".format(
-                      self.filename, self.extension, sizeof(file_size), path))
+                      self.filename.encode('utf-8'), self.extension, sizeof(file_size), path))
 
                 while True:
                     self._buffer = response.read(chunk_size)
