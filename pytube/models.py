@@ -50,9 +50,11 @@ class Video(object):
 
         """
 
+        self.filename = self.filename.encode('utf-8')
+
         path = (normpath(path) + '/' if path else '')
-        fullpath = '{0}{1}.{2}'.format(path, self.filename, self.extension).encode('utf-8')
-        
+        fullpath = '{0}{1}.{2}'.format(path, self.filename, self.extension)
+
         # Check for conflicting filenames
         if isfile(fullpath):
             print("\n\nError: Conflicting filename:'{}'.\n\n".format(
