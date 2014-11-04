@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import os
 from os.path import normpath, isfile
 from os import remove
 from time import clock
@@ -29,7 +30,7 @@ class Video(object):
         """
 
         self.url = url
-        self.filename = filename
+        self.filename = unicode(filename)
         self.__dict__.update(**attributes)
 
     def download(self, path=None, chunk_size=8 * 1024,
@@ -50,14 +51,13 @@ class Video(object):
 
         """
 
-        self.filename = self.filename.encode('utf-8')
 
         path = (normpath(path) + '/' if path else '')
-        fullpath = '{0}{1}.{2}'.format(path, self.filename.encode('utf-8'), self.extension)
+        fullpath = os.path.join(path, self.filename + "." + self.extension).encode('utf-8', 'ignore')
 
         # Check for conflicting filenames
         if isfile(fullpath):
-            print("\n\nError: Conflicting filename:'{}'.\n\n".format(
+            print(u"\n\nError: Conflicting filename:'{}'.\n\n".format(
                   self.filename.encode('utf-8')))
             exit(1)
 
@@ -70,8 +70,8 @@ class Video(object):
         try:
             with open(fullpath, 'wb') as dst_file:
                 # Print downloading message
-                print("\nDownloading: '{0}.{1}' (Bytes: {2}) \nto path: {3}\n\n".format(
-                      self.filename.encode('utf-8'), self.extension, sizeof(file_size), path))
+                print(u"\nDownloading: '{0} Bytes to path: {1}\n".format(
+                      sizeof(file_size), path))
 
                 while True:
                     self._buffer = response.read(chunk_size)
