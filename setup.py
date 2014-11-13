@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from pytube import __version__
 import os
 
-
 from setuptools import setup
-
 
 def open_file(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
@@ -18,9 +14,11 @@ reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
     name="pytube",
-    version=__version__,
+    version="0.2.0",
     author="Nick Ficano",
     author_email="nficano@gmail.com",
+    setup_requires=reqs,
+    install_requires=reqs,
     packages=['pytube'],
     url="http://pytube.nickficano.com",
     license=open_file('LICENSE.txt').read(),
@@ -44,6 +42,4 @@ setup(
                 "YouTube videos.",
     long_description=open_file('README.rst').read(),
     zip_safe=True,
-    setup_requires=reqs,
-    install_requires=reqs,
 )

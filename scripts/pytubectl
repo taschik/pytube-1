@@ -49,15 +49,9 @@ def _main():
         vid = yt.get(args.ext, args.res)
         # Check if there's a video returned
         if not vid:
-<<<<<<< HEAD
-            print "\nThere's no video with the specified format/resolution combination.\n"
-            pprint(res_formts)
-            sys.exit(1)
-=======
             print("There's no video with the specified format/resolution combination.")
             pprint(yt.videos)
             return 1
->>>>>>> 431d31dadfdfee86876c608d1e359989cfd082f7
 
     elif args.ext:
         # There are several videos with the same extension
@@ -91,16 +85,8 @@ def _main():
             print("\nError!")
         return ret
     except KeyboardInterrupt:
-<<<<<<< HEAD
-        print "Download interrupted."
-        sys.exit(1)
-
-if __name__ == '__main__':
-    _main()
-=======
         print("Download interrupted.")
         return 1
 
 if __name__ == "__main__":
     sys.exit(_main())
->>>>>>> 431d31dadfdfee86876c608d1e359989cfd082f7
