@@ -9,7 +9,6 @@ try:
     from urllib2 import urlopen
 except ImportError:
     from urllib.request import urlopen
-from sys import exit
 from pytube.utils import sizeof
 
 
@@ -96,13 +95,13 @@ class Video(object):
         except BufferError:
             print("\n\nError: Failed on writing buffer.\n"
                   "Failed to write video to file.\n\n")
-            exit(1)
+            return 1
 
         except KeyboardInterrupt:
             print("\n\nInterrupt signal given.\nDeleting incomplete video"
                   "('{0}.{1}').\n\n".format(self.filename.encode('utf-8'), self.extension))
             remove(fullpath)
-            exit(1)
+            return 1
 
     def __repr__(self):
         """A cleaner representation of the class instance."""

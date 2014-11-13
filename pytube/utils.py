@@ -2,6 +2,18 @@
 # -*- coding: utf-8 -*-
 import argparse
 import re
+import sys
+import time
+
+from os import path
+from sys import stdout
+from time import clock
+
+
+class FullPaths(argparse.Action):
+    """Expand user- and relative-paths"""
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, path.abspath(path.expanduser(values)))
 
 from os import path
 from sys import stdout

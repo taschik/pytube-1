@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 from .exceptions import MultipleObjectsReturned, YouTubeError, CipherError
-from .tinyjs import JSVM
 from .models import Video
 from .utils import safe_filename
 try:
@@ -15,6 +14,7 @@ except ImportError:
 
 import re
 import json
+import execjs
 
 YT_BASE_URL = 'http://www.youtube.com/get_video_info'
 
@@ -330,30 +330,29 @@ class YouTube(object):
             self._js_code = (urlopen(url).read().decode()
                              if not self._js_code else self._js_code)
 
-        try:
-            regexp = r'function \w{2}\(\w{1}\)\{\w{1}=\w{1}\.split\(\"\"\)' \
-                '\;(.*)\}'
-            code = re.findall(regexp, self._js_code)[0]
-            code = code[:code.index("}")]
+        codes = re.findall(r"function \S{2}\(\S{1}\)\{\S{1}=\S{1}\.split\(\"\"\)\;(.*?)\}", self._js_code)
+        for code in codes:
+            try:
+                # Get the helper object that's used by the cipher code
+                obj = re.findall(r"[a-zA-Z]{2}\.", code)[0][0:2]
+                obj = re.findall(r"var " + obj + "=.*?};", self._js_code)[0]
 
-            signature = "a='" + s + "'"
+                signature = "a='" + s + "'.split('');"
+                # ^ Maybe figure out the name of the var instead of assuming 'a' (Which seems to always be true as of now)
+                # Actually, on all 3 videos I've encountered the cipher function was exactly the same,
+                # so maybe you don't need any kind of JS interpreter at all and just implement the
+                # algorithm in python...
 
-            # Tiny JavaScript VM
-            jsvm = JSVM()
-
-            # Precompiling with the super JavaScript VM (if hasn't compiled
-            # yet)
-            if not self._precompiled:
-                self._precompiled = jsvm.compile(code)
-            jsvm.setPreinterpreted(jsvm.compile(signature) + self._precompiled)
-
-            # Executing the JS code
-            return jsvm.run()["return"]
-
-        except Exception as e:
-            raise CipherError("Couldn't cipher the signature. Maybe YouTube "
-                              "has changed the cipher algorithm. Notify "
-                              "this issue on GitHub: %s" % e)
+                # Wrap in function and evaluate using system's js interpreter (ie spidermonkey)
+                code = obj[4:] + ' function getsig(){' + signature + code + '};'
+                compiledcode=execjs.compile(code)
+                ret=compiledcode.call("getsig")
+                if len(ret) < 10: # Better: check exit code
+                    continue
+                return ret
+            except Exception as e:
+                print("Oopsie... ", format(e))
+                raise CipherError("Couldn't cipher the signature. Maybe YouTube has changed the cipher algorithm. Notify this issue on GitHub: %s" % format(e))
 
     def _extract_fmt(self, text):
         """YouTube does not pass you a completely valid URLencoded form, I
