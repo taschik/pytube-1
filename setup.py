@@ -44,5 +44,6 @@ setup(
                 "YouTube videos.",
     long_description=open_file('README.rst').read(),
     zip_safe=True,
+    setup_requires=reqs,
     install_requires=reqs,
 )
