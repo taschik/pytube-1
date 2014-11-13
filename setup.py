@@ -14,6 +14,10 @@ except ImportError:
 def open_file(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
 
+from pip.req import parse_requirements
+
+install_reqs = parse_requirements("requirements.txt")
+reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
     name="pytube",
@@ -43,5 +47,5 @@ setup(
                 "YouTube videos.",
     long_description=open_file('README.rst').read(),
     zip_safe=True,
-    install_requires=["PyExecJS"],
+    install_requires=reqs,
 )
