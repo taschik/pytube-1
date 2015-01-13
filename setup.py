@@ -3,13 +3,14 @@
 import os
 
 from setuptools import setup
+from pip.download import  import PipSession
 
 def open_file(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
 
 from pip.req import parse_requirements
 
-install_reqs = parse_requirements("requirements.txt")
+install_reqs = parse_requirements("requirements.txt", session=PipSession(retries=3))
 reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
