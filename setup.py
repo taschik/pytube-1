@@ -3,14 +3,19 @@
 import os
 
 from setuptools import setup
-from pip.download import PipSession
+
 
 def open_file(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
 
 from pip.req import parse_requirements
 
-install_reqs = parse_requirements("requirements.txt", session=PipSession(retries=3))
+try:
+    from pip.download import PipSession
+    install_reqs = parse_requirements("requirements.txt", session=PipSession(retries=3))
+except Exception, e:
+    install_reqs = parse_requirements("requirements.txt")
+
 reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
@@ -31,7 +36,7 @@ setup(
         "Programming Language :: Python",
         "Natural Language :: English",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 2.6",
+        "Programming Languaged :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.0",
         "Topic :: Software Development :: Libraries :: Python Modules",
