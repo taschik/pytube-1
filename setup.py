@@ -3,7 +3,7 @@
 import os
 
 from setuptools import setup
-from pip.download import  import PipSession
+from pip.download import PipSession
 
 def open_file(fname):
     return open(os.path.join(os.path.dirname(__file__), fname))
